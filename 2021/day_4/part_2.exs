@@ -27,16 +27,20 @@ mark_num = fn b, num -> Enum.map(b, &Enum.filter(&1, fn x -> x != num end)) end
 
 check_bingo = fn b -> Enum.any?(b, fn b_row -> b_row == [] end) end
 
-{ran_num, end_bingos} =
-  Enum.reduce_while(ran_nums, {nil, bingos}, fn ran_num, {_, bs} ->
-    new_bs = bs |> Enum.map(&mark_num.(&1, ran_num))
-    winning_b = new_bs |> Enum.find(&(check_bingo.(&1)))
+res =
+  Enum.reduce_while(ran_nums, [{nil, [], bingos}], fn ran_num, [{_, _, bs} | _] = acc ->
+    {winning_bs, new_bs} =
+      bs
+      |> Enum.map(&mark_num.(&1, ran_num))
+      |> Enum.split_with(&check_bingo.(&1))
 
-    case winning_b do
-      nil -> {:cont, {ran_num, new_bs}}
-      _   -> {:halt, {ran_num, winning_b}} # NB: We unbox the bingo board here!
+    case new_bs do
+      [] -> {:halt, [{ran_num, winning_bs, new_bs} | acc]}
+      _  -> {:cont, [{ran_num, winning_bs, new_bs} | acc]}
     end
   end)
+
+{ran_num, [end_bingos | _], _} = Enum.at(res, 0)
 
 calc_score = fn ran_num, b ->
     # NB: we need to div by 2 cause earlier we dup'd all values with transp and concat

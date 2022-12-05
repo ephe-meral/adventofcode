@@ -4,8 +4,7 @@ start = {0, 0}
 
 {end_x, end_y} =
   File.read!("input.txt")
-  |> String.trim()
-  |> String.split("\n")
+  |> String.split("\n", trim: true)
   |> Enum.map(fn x -> String.split(x, " ") end)
   |> Enum.map(fn [a, b] -> [a, String.to_integer(b)] end)
   |> Enum.map(fn

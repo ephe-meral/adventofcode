@@ -1,0 +1,16 @@
+# pseudo-lang drafts
+
+'input.txt [ s:to_int ] f:lines_map d:from_list d:lag d:drop_na [ [ lt ] e:red ] d:rows_map d:rows_sum
+
+# decompose more, introduce e:pred (predecessor / successor)
+
+'input.txt' f:lines [ n:parse e:pred k:lt? ] e:map e:sum
+
+# fix issue with mutability within parse & pred
+# simplify 'map' to sigil, change to filter
+
+'input.txt' f:lines m[ n:parse ] f[ e:pred k:lt? ] e:count
+
+# use chunking instead of pred (complications of implemenenting pred)
+
+'input.txt' f:lines [ n:parse ] e:map 2 1 e:chunk [ [ k:lt? ] e:red ] e:filter e:count

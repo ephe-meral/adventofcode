@@ -1,0 +1,12 @@
+# implicit: lt? is false for comparisons with nil/nan
+# sum converts bool to 0 (false) and 1 (true)
+
+'input.txt' f:lines [ n:parse e:pred e:pred k:lt? ] e:map e:sum
+
+'input.txt' f:lines
+  [ n:parse ] e:map
+  3 1 e:chunk
+  [ e:sum ] e:map
+  2 1 e:chunk
+  [ [ k:lt? ] e:red ] e:filter
+  e:count
